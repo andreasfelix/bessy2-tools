@@ -157,6 +157,7 @@ class GUI:
     def compute_multiknob_new_quad_values(self):
         if self.new_quad_values.keys() == self.second_new_quad_values.keys():
             self.multiknob_new_quad_values.clear()
+            self.multiknob_new_quad_values.update(self.new_quad_values)
             for key in self.new_quad_values:
                 if self.new_quad_values[key] != self.second_new_quad_values[key]:
                     self.multiknob_new_quad_values[key] = (1 - self.multiknob.get()) * self.new_quad_values[key] + self.multiknob.get() * self.second_new_quad_values[key]
