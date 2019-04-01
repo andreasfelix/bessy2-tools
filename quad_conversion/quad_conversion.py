@@ -2,7 +2,7 @@ import tkinter as tk
 from tkinter import filedialog
 from tkinter import ttk
 import os, json
-from name_conversion import epics2short, short2epics
+from name_conversion import epics2short, short2epics, quadlist_epics
 from tk_utils import grid_configure, ScrollSpinbox
 
 try:
@@ -167,10 +167,19 @@ class GUI:
 
 
     def set_new_PS_values(self):  # TODO: implement with Paul
-        pass
+        for magnet,value in self.new_PS_values.items():
+            caput(magnet + ':set', value)
 
-    def set_ref_PS_values(self):  # TODO: implement with Paul
-        pass
+
+    def save_current_PS_values(self):  # TODO: implement with Paul
+        self.saved_PS_values = {}
+        for magnet in quadlist_epics:
+            self.saved_PS_values[magnet] = caget(magnet + ':set')
+
+    def set_saved_PS_values(self):
+        for magnet,value in self.saved_PS_values.items():
+            caput(magnet + ':set', value)
+
 
 
 if __name__ == '__main__':
