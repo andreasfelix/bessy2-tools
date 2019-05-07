@@ -80,7 +80,7 @@ class GUI:
         self.tree_view.delete(*self.tree_view.get_children())
         if self.new_PS_values:
             for i, magnet in enumerate(self.new_PS_values.keys()):
-                values = (magnet, self.new_PS_values[magnet], self.ref_PS_values[magnet], caget(magnet + ':rdbk'),
+                values = (magnet, self.new_PS_values[magnet], self.ref_PS_values[magnet], caget(magnet + ':set'),
                           self.new_PS_values[magnet] / self.ref_PS_values[magnet], self.new_quad_values[magnet], self.ref_quad_values[magnet])
                 values = tuple(round(x, 3) if isinstance(x, float) else x for x in values)
                 self.tree_view.insert('', i, magnet, values=values)
@@ -92,7 +92,8 @@ class GUI:
         self.bottom_frame.grid(row=3, sticky="wens")
 
         self.button_set_new_PS_values = tk.Button(self.bottom_frame, text="Set new PS values", command=self.set_new_PS_values, bg="#DC143C", fg="white")
-        self.button_set_ref_PS_values = tk.Button(self.bottom_frame, text="Set ref PS values", command=self.set_ref_PS_values, bg="#DC143C", fg="white")
+        self.button_save_all_PS_values = tk.Button(self.bottom_frame, text="Save All PS values", command=self.save_all_PS_values, bg="#DC143C", fg="white")
+        self.button_set_saved_PS_values = tk.Button(self.bottom_frame, text="Set saved PS values", command=self.set_saved_PS_values, bg="#DC143C", fg="white")
         self.button_compute_new_PS_values = tk.Button(self.bottom_frame, text="Compute new PS values", command=lambda: self.compute_new_PS_values(self.new_quad_values))
         self.button_print_new_PS_values = tk.Button(self.bottom_frame, text="Update view", command=self.update_tree_view)
         self.toggle_multiknob = tk.IntVar()
@@ -103,7 +104,8 @@ class GUI:
         self.button_print_new_PS_values.pack(side="left")
         self.checkbutton_toggle_multiknob.pack(side="left")
         self.button_set_new_PS_values.pack(side="right")
-        self.button_set_ref_PS_values.pack(side="right")
+        self.button_set_saved_PS_values.pack(side="right")
+        self.button_save_all_PS_values.pack(side="right")
 
     def create_multiknob_frame(self):
         self.second_new_quad_values = {}
@@ -171,7 +173,7 @@ class GUI:
             caput(magnet + ':set', value)
 
 
-    def save_current_PS_values(self):  # TODO: implement with Paul
+    def save_all_PS_values(self):  # TODO: implement with Paul
         self.saved_PS_values = {}
         for magnet in quadlist_epics:
             self.saved_PS_values[magnet] = caget(magnet + ':set')
