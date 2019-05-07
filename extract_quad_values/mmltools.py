@@ -96,7 +96,7 @@ class ATRingWithAO:
         self.n_at_elements = len(r)
         self.name_map = NameMap(self.n_at_elements)
 
-        print(f'Locofile belongs to: {self.ad.Machine}')
+        print(f'Locofile belongs to: {self.ad.Maschine}')
 
         # loop over AO entries to fill name_map
         for family_name in self.ao._fieldnames:
@@ -132,24 +132,24 @@ class ATRingWithAO:
                 raise Exception('ERROR : BROKEN FILE!!! Probable cause: init and AT file incompatible!!!')
 
     def _get_magnet_strength(self, name, strength, at_type):
-        if self.ad.Machine == 'BESSYII':
+        if self.ad.Maschine == 'BESSYII':
             quad_length = {'Q1': 0.25, 'Q2': 0.20, 'Q3': 0.25, 'Q4': 0.50, 'Q5': 0.20, 'QI': 0.122}
             sext_length = {'S1': 0.21, 'S2': 0.16, 'S3': 0.16, 'S4': 0.16}
             name = name.replace('PR', '').replace('PD', 'D').replace('PT', 'T').replace('PQ', 'Q').replace('R', '')
-        elif self.ad.Machine == 'MLS':
+        elif self.ad.Maschine == 'MLS':
             quad_length = {'Q1': 0.2, 'Q2': 0.2, 'Q3': 0.2}
             sext_length = {'S1': 0.1, 'S2': 0.1, 'S3': 0.1}
             name = name.replace('RP', '')
         else:
-            raise Exception('Unkown Machine.')
+            raise Exception('Unkown Maschine.')
 
         if at_type == 'QUAD':
-            return {name: dict(type=at_type, length=quad_length[name[:2]], k1=strength)}
+            return {name: dict(type="Quad", length=quad_length[name[:2]], k1=strength)}
         elif at_type == 'SEXT':
             if name == 'S1':
                 print('! Note: Is S1 split? -> change length to 0.105')
             length = sext_length[name[:2]]
-            return {name: dict(type=at_type, length=sext_length, k2=strength / length * 2)}
+            return {name: dict(type="Sext", length=sext_length, k2=strength / length * 2)}
         else:
             print("Unkown at type!")
 

@@ -76,7 +76,7 @@ class GUI:
         for heading in headings:
             self.tree_view.heading(heading, text=heading)
 
-    def update_tree_view(self): # correct new k valuet
+    def update_tree_view(self):  # correct new k valuet
         self.tree_view.delete(*self.tree_view.get_children())
         if self.new_PS_values:
             for i, magnet in enumerate(self.new_PS_values.keys()):
@@ -96,10 +96,12 @@ class GUI:
         self.button_set_saved_PS_values = tk.Button(self.bottom_frame, text="Set saved PS values", command=self.set_saved_PS_values, bg="#DC143C", fg="white")
         self.button_compute_new_PS_values = tk.Button(self.bottom_frame, text="Compute new PS values", command=lambda: self.compute_new_PS_values(self.new_quad_values))
         self.button_print_new_PS_values = tk.Button(self.bottom_frame, text="Update view", command=self.update_tree_view)
+        self.button_save_current_PS_values_to_file = tk.Button(self.bottom_frame, text='Save current PS values to file', command=self.save_current_PS_values_to_file)
         self.toggle_multiknob = tk.IntVar()
         self.toggle_multiknob.set(0)
         self.checkbutton_toggle_multiknob = tk.Checkbutton(self.bottom_frame, text="Toggle Multiknob", variable=self.toggle_multiknob, command=self.toggle_multiknob_frame)
 
+        self.button_save_current_PS_values_to_file.pack(side="left")
         self.button_compute_new_PS_values.pack(side="left")
         self.button_print_new_PS_values.pack(side="left")
         self.checkbutton_toggle_multiknob.pack(side="left")
@@ -141,7 +143,7 @@ class GUI:
             json_dict = json.load(file)
             if lattice_file:
                 json_dict = json_dict["elements"]
-                json_dict = {short2epics[short]: attributes["k1"] for short, attributes in json_dict.items() if attributes["type"] == "Quad" and short !="QIT6"}
+                json_dict = {short2epics[short]: attributes["k1"] for short, attributes in json_dict.items() if attributes["type"] == "Quad" and short != "QIT6"}
             dictionary.update(json_dict)
             string_var.set(path)
 
@@ -167,11 +169,9 @@ class GUI:
         else:
             print("Multiknob lattices do not have the same Magnet!")
 
-
     def set_new_PS_values(self):  # TODO: implement with Paul
-        for magnet,value in self.new_PS_values.items():
+        for magnet, value in self.new_PS_values.items():
             caput(magnet + ':set', value)
-
 
     def save_all_PS_values(self):  # TODO: implement with Paul
         self.saved_PS_values = {}
@@ -179,9 +179,17 @@ class GUI:
             self.saved_PS_values[magnet] = caget(magnet + ':set')
 
     def set_saved_PS_values(self):
-        for magnet,value in self.saved_PS_values.items():
+        for magnet, value in self.saved_PS_values.items():
             caput(magnet + ':set', value)
 
+    def save_current_PS_values_to_file(self):
+        current_ps_values = {}
+        for magnet in quad_list_epics:
+            current_ps_values[magnet] = caget(magnet + ':set')
+        print(current_ps_values)
+        print('save current_ps_values ps values to file')
+        with filedialog.asksaveasfile(initialdir=os.path.dirname(os.path.abspath(__file__)), title='Save current PS values') as file:
+            json.dump(current_ps_values, file, indent=2)
 
 
 if __name__ == '__main__':

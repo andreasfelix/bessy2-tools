@@ -5,12 +5,13 @@ with open('b2_template.json') as file:
     template_lattice = json.load(file)
 
 if len(sys.argv) > 1:
-    path = sys.argv[:1]
+    paths = sys.argv[1:]
 else:
     print('DEBUG')
     paths = ['ATRingWithAO.mat']
 
 for path in paths:
+    print(path)
     lwa = mmltools.ATRingWithAO(path)
     quads = lwa.get_magnet_strength(at_type='QUAD', method='byPowerSupply')
     # sexts = lwa.get_magnet_strength(at_type='SEXT', method='byPowerSupply')

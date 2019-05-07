@@ -1,5 +1,5 @@
 {
-  "name": "BII_2017-08-04_23-42_LOCOFitByPS_noID_ActualUserMode",
+  "name": "BII_Template",
   "elements": {
     "S1": {"type": "Sext", "length": 0.105, "k2": 53.711598071533},
     "S2": {"type": "Sext", "length": 0.16, "k2": -44.968873069},
