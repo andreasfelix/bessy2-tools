@@ -7,6 +7,7 @@ print('start tune optimizer')
 
 tune_x = PV('TUNEZR:rdH')
 tune_y = PV('TUNEZR:rdV')
+tune_put = PV('TUNEXPV:sign_apply')
 current = PV('CUMZR:rdCur')
 
 magnets = (
@@ -16,6 +17,8 @@ magnets = (
     PV('S4P1T6R:set'),
 )
 
+lifetime = PV('TOPUPCC:rdLT')
+
 initial_values = np.array([magnet.get() for magnet in magnets])
 
 print(initial_values)
@@ -23,9 +26,12 @@ print(initial_values)
 for magnet in magnets:
     print(magnet.pvname, magnet.get())
 
+counter = 0
+
 
 def fitness(*args):
     while current.get() < 3:
+        print('wait for 5 seconds, paul please give me new current!')
         time.sleep(5)
         return 1000
 
@@ -33,10 +39,17 @@ def fitness(*args):
         magnet.put(value)
         print(f'set {magnet.pvname} to {value}')
 
-    time.sleep(0.2)
+    global counter
+    if counter % 20:
+        if tune_x.get() < 625:
+            tune_put.put(1)
+        else:
+            tune_put.put(-1)
 
-    tune_diff = np.abs(tune_x.get() - 625)
-    return tune_diff
+    time.sleep(0.2)
+    counter += 1
+
+    return -lifetime.get()
 
 
 def rest_to_initial():
@@ -44,7 +57,23 @@ def rest_to_initial():
     for magnet, value in zip(magnets, initial_values):
         magnet.put(value)
 
+
 try:
+    # while True:
+    #     tmp = tune_x.get() - 625
+    #     if tmp < 5:
+    #         break
+    #
+    #     if tune_x.get() < 625:
+    #         tune_put.put(1)
+    #         tune_put.put(1)
+    #         tune_put.put(1)
+    #     else:
+    #         tune_put.put(-1)
+    #         tune_put.put(-1)
+    #         tune_put.put(-1)
+
     res = minimize(fitness, initial_values, method='Nelder-Mead')
+
 except:
     rest_to_initial()
