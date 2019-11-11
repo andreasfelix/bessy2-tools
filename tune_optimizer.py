@@ -26,7 +26,7 @@ for magnet in magnets:
 
 def fitness(*args):
     while current.get() < 3:
-        time.sleep(1)
+        time.sleep(5)
         return 1000
 
     for magnet, value in zip(magnets, *args):
