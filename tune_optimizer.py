@@ -20,6 +20,8 @@ magnets = (
 lifetime = PV('TOPUPCC:rdLT')
 
 initial_values = np.array([magnet.get() for magnet in magnets])
+diff = 0.005
+bounds = ((value * (1 - diff), value * (1 + diff)) for value in initial_values)
 
 print(initial_values)
 
