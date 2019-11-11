@@ -43,7 +43,7 @@ def fitness(*args):
 
     global counter
     if counter % 20:
-        if tune_x.get() < 625:
+        if tune_x.get() < 1250:
             tune_put.put(1)
         else:
             tune_put.put(-1)
