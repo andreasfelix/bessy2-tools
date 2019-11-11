@@ -169,11 +169,11 @@ class GUI:
         else:
             print("Multiknob lattices do not have the same Magnet!")
 
-    def set_new_PS_values(self):  # TODO: implement with Paul
+    def set_new_PS_values(self):
         for magnet, value in self.new_PS_values.items():
             caput(magnet + ':set', value)
 
-    def save_all_PS_values(self):  # TODO: implement with Paul
+    def save_all_PS_values(self):
         self.saved_PS_values = {}
         for magnet in quad_list_epics:
             self.saved_PS_values[magnet] = caget(magnet + ':set')
@@ -189,6 +189,7 @@ class GUI:
         print(current_ps_values)
         print('save current_ps_values ps values to file')
         with filedialog.asksaveasfile(initialdir=os.path.dirname(os.path.abspath(__file__)), title='Save current PS values') as file:
+
             json.dump(current_ps_values, file, indent=2)
 
 
