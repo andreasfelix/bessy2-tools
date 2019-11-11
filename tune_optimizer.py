@@ -48,7 +48,7 @@ def fitness(*args):
         else:
             tune_put.put(-1)
 
-    time.sleep(0.2)
+    time.sleep(2)
     counter += 1
 
     return -lifetime.get()
