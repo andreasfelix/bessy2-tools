@@ -20,7 +20,7 @@ magnets = (
 lifetime = PV('TOPUPCC:rdLT')
 
 initial_values = np.array([magnet.get() for magnet in magnets])
-diff = 0.005
+diff = 0.003
 bounds = ((value * (1 - diff), value * (1 + diff)) for value in initial_values)
 
 print(initial_values)
@@ -75,7 +75,7 @@ try:
     #         tune_put.put(-1)
     #         tune_put.put(-1)
 
-    res = minimize(fitness, initial_values, method='Nelder-Mead')
+    res = minimize(fitness, initial_values, bounds=bounds, method='Nelder-Mead')
 
 except:
     rest_to_initial()
